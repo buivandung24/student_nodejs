@@ -1,0 +1,26 @@
+# --- CHUNG (GENERAL) ---
+node_modules/
+.env
+.DS_Store
+dist/
+build/
+*.log
+
+# --- BACKEND (NODEJS) ---
+backend/node_modules/
+backend/.env
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+
+# --- FRONTEND (REACTJS) ---
+frontend/node_modules/
+frontend/.env
+frontend/build/
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage/
+
+# --- KIỂM THỬ (SELENIUM/TEST) ---
+test-results/
+screenshots/
