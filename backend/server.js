@@ -1,34 +1,38 @@
-﻿import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import app from './src/app.js';
 
 dotenv.config();
 
+const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
 
-/* Kết nối MongoDB */
-const connectDB = async () => {
-    try {
-        if (!MONGO_URI) {
-            throw new Error('MONGO_URI is missing in .env');
-        }
+app.use(cors());
+app.use(express.json());
 
-        await mongoose.connect(MONGO_URI);
-        console.log('MongoDB connected');
-    } catch (error) {
-        console.error('MongoDB connection error:', error.message);
-        process.exit(1);
-    }
-};
+// Kết nối DB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB error:', err));
 
-/*    Khởi động server  */
-const startServer = async () => {
-    await connectDB();
+// Routes
+import authRoutes from './src/routes/authRoutes.js';
+import departmentRoutes from './src/routes/departmentRoutes.js';
+import classRoutes from './src/routes/classRoutes.js';
+import courseRoutes from './src/routes/courseRoutes.js';
+import studentRoutes from './src/routes/studentRoutes.js';
+import enrollmentRoutes from './src/routes/enrollmentRoutes.js';
 
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
-    });
-};
+app.use('/api/auth', authRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/enrollments', enrollmentRoutes);
 
-startServer();
+app.get('/', (req, res) => res.send('🚀 Student Management API is running!'));
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
