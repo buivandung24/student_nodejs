@@ -7,19 +7,14 @@ import classRoutes from './routes/classRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import enrollmentRoutes from './routes/enrollmentRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 const app = express();
 
-/* ==============================
-   Middleware cơ bản
-============================== */
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ==============================
-   Route kiểm tra server
-============================== */
 app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
@@ -27,19 +22,14 @@ app.get('/', (req, res) => {
     });
 });
 
-/* ==============================
-   API Routes
-============================== */
 app.use('/api/auth', authRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
-/* ==============================
-   404 handler
-============================== */
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -47,9 +37,6 @@ app.use((req, res) => {
     });
 });
 
-/* ==============================
-   Global error handler
-============================== */
 app.use((err, req, res, next) => {
     console.error('Global error:', err);
 
