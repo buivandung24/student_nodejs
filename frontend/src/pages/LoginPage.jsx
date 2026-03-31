@@ -2,18 +2,29 @@ import { useState } from "react";
 import { C, S } from "../constants/styles";
 import Btn from "../components/Btn";
 import Input from "../components/Input";
+import api from "../services/api";
 
 export default function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username || !password) {
       setError("Please fill in all fields.");
       return;
     }
-    onLogin(username);
+
+    try {
+      setError("");
+      const data = await api.post("/auth/login", {
+        username,
+        password,
+      });
+      onLogin(data);
+    } catch (err) {
+      setError(err.message || "Login failed.");
+    }
   };
 
   return (

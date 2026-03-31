@@ -8,11 +8,21 @@ export default function Select({ value, onChange, options, style }) {
       style={{ ...S.select, ...style }}
     >
       <option value="">Select...</option>
-      {options.map((o) => (
-        <option key={o} value={o}>
-          {o}
-        </option>
-      ))}
+      {options.map((o) => {
+        if (typeof o === "string") {
+          return (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          );
+        }
+
+        return (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        );
+      })}
     </select>
   );
 }

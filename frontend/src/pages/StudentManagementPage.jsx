@@ -1,20 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { C, S } from "../constants/styles";
 import Btn from "../components/Btn";
 import Input from "../components/Input";
 import Select from "../components/Select";
 import Modal from "../components/Modal";
 import ConfirmModal from "../components/ConfirmModal";
+import api from "../services/api";
 
-const EMPTY_FORM = { id: "", name: "", dob: "", gender: "", dept: "", cls: "", email: "" };
+const EMPTY_FORM = { _id: "", id: "", name: "", dob: "", gender: "", deptId: "", clsId: "", email: "" };
 
-export default function StudentManagementPage({
-  students,
-  setStudents,
-  depts,
-  classes,
-  setViewStudent,
-}) {
+export default function StudentManagementPage({ setViewStudent }) {
+  const [students, setStudents] = useState([]);
+  const [depts, setDepts] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [search, setSearch] = useState("");
   const [filterDept, setFilterDept] = useState("");
   const [filterClass, setFilterClass] = useState("");
@@ -22,16 +20,38 @@ export default function StudentManagementPage({
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
-  const deptOptions = depts.map((d) => d.name);
-  const classOptions = classes.map((c) => c.name);
+  const loadData = async () => {
+    try {
+      const [studentsData, deptsData, classesData] = await Promise.all([
+        api.get("/students"),
+        api.get("/departments"),
+        api.get("/classes"),
+      ]);
+
+      setStudents(studentsData);
+      setDepts(deptsData);
+      setClasses(classesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const deptOptions = depts.map((d) => ({ value: d._id, label: d.name }));
+  const classOptions = classes
+    .filter((c) => !filterDept || c.department?._id === filterDept)
+    .map((c) => ({ value: c._id, label: c.name }));
 
   const filtered = students.filter(
     (s) =>
       (!search ||
         s.name.toLowerCase().includes(search.toLowerCase()) ||
-        s.id.toLowerCase().includes(search.toLowerCase())) &&
-      (!filterDept || s.dept === filterDept) &&
-      (!filterClass || s.cls === filterClass)
+        s.studentId.toLowerCase().includes(search.toLowerCase())) &&
+      (!filterDept || s.department?._id === filterDept) &&
+      (!filterClass || s.class?._id === filterClass)
   );
 
   const openAdd = () => {
@@ -40,22 +60,51 @@ export default function StudentManagementPage({
   };
 
   const openEdit = (s) => {
-    setForm({ id: s.id, name: s.name, dob: s.dob, gender: s.gender, dept: s.dept, cls: s.cls, email: s.email });
+    setForm({
+      _id: s._id,
+      id: s.studentId,
+      name: s.name,
+      dob: s.dob ? String(s.dob).slice(0, 10) : "",
+      gender: s.gender,
+      deptId: s.department?._id || "",
+      clsId: s.class?._id || "",
+      email: s.email,
+    });
     setModal({ mode: "edit", student: s });
   };
 
-  const handleSave = () => {
-    if (modal.mode === "add") {
-      setStudents((prev) => [...prev, form]);
-    } else {
-      setStudents((prev) => prev.map((s) => (s.id === form.id ? { ...s, ...form } : s)));
+  const handleSave = async () => {
+    const payload = {
+      studentId: form.id,
+      name: form.name,
+      dob: form.dob,
+      gender: form.gender,
+      department: form.deptId,
+      class: form.clsId,
+      email: form.email,
+    };
+
+    try {
+      if (modal.mode === "add") {
+        await api.post("/students", payload);
+      } else {
+        await api.put(`/students/${form._id}`, payload);
+      }
+      setModal(null);
+      loadData();
+    } catch (error) {
+      alert(error.message);
     }
-    setModal(null);
   };
 
-  const handleDelete = () => {
-    setStudents((prev) => prev.filter((s) => s.id !== deleteTarget.id));
-    setDeleteTarget(null);
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/students/${deleteTarget._id}`);
+      setDeleteTarget(null);
+      loadData();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const setField = (key) => (val) => setForm((f) => ({ ...f, [key]: val }));
@@ -64,7 +113,6 @@ export default function StudentManagementPage({
     <div>
       <h1 style={S.pageTitle}>Student Management</h1>
 
-      {/* Toolbar */}
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
         <Input value={search} onChange={setSearch} placeholder="Search..." style={{ width: 220 }} />
         <Select value={filterDept} onChange={setFilterDept} options={deptOptions} style={{ width: 180 }} />
@@ -74,7 +122,6 @@ export default function StudentManagementPage({
         </Btn>
       </div>
 
-      {/* Table */}
       <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden" }}>
         <table style={S.table}>
           <thead>
@@ -86,15 +133,15 @@ export default function StudentManagementPage({
           </thead>
           <tbody>
             {filtered.map((s) => (
-              <tr key={s.id}>
-                <td style={S.td}>{s.id}</td>
+              <tr key={s._id}>
+                <td style={S.td}>{s.studentId}</td>
                 <td style={S.td}>{s.name}</td>
-                <td style={S.td}>{s.dept}</td>
-                <td style={S.td}>{s.cls}</td>
+                <td style={S.td}>{s.department?.name}</td>
+                <td style={S.td}>{s.class?.name}</td>
                 <td style={S.td}>{s.email}</td>
                 <td style={S.td}>
                   <div style={S.row(6)}>
-                    <Btn size="sm" onClick={() => setViewStudent(s)}>View</Btn>
+                    <Btn size="sm" onClick={() => setViewStudent(s._id)}>View</Btn>
                     <Btn size="sm" variant="secondary" onClick={() => openEdit(s)}>Edit</Btn>
                     <Btn size="sm" variant="danger" onClick={() => setDeleteTarget(s)}>Delete</Btn>
                   </div>
@@ -112,7 +159,6 @@ export default function StudentManagementPage({
         </table>
       </div>
 
-      {/* Add/Edit Modal */}
       {modal && (
         <Modal title="Add / Edit Student Form" onClose={() => setModal(null)}>
           <div style={S.grid2}>
@@ -120,8 +166,17 @@ export default function StudentManagementPage({
             <div><label style={S.label}>Full name</label><Input value={form.name} onChange={setField("name")} /></div>
             <div><label style={S.label}>Date of birth</label><Input value={form.dob} onChange={setField("dob")} type="date" /></div>
             <div><label style={S.label}>Gender</label><Select value={form.gender} onChange={setField("gender")} options={["Male", "Female", "Other"]} /></div>
-            <div><label style={S.label}>Department</label><Select value={form.dept} onChange={setField("dept")} options={deptOptions} /></div>
-            <div><label style={S.label}>Class</label><Select value={form.cls} onChange={setField("cls")} options={classOptions} /></div>
+            <div><label style={S.label}>Department</label><Select value={form.deptId} onChange={setField("deptId")} options={deptOptions} /></div>
+            <div>
+              <label style={S.label}>Class</label>
+              <Select
+                value={form.clsId}
+                onChange={setField("clsId")}
+                options={classes
+                  .filter((c) => !form.deptId || c.department?._id === form.deptId)
+                  .map((c) => ({ value: c._id, label: c.name }))}
+              />
+            </div>
           </div>
           <div style={{ marginTop: 16 }}>
             <label style={S.label}>Email</label>
@@ -134,7 +189,6 @@ export default function StudentManagementPage({
         </Modal>
       )}
 
-      {/* Delete confirm */}
       {deleteTarget && (
         <ConfirmModal
           message={`Delete student "${deleteTarget.name}"?`}

@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { S } from "../constants/styles";
+import api from "../services/api";
 
 const QUICK_LINKS = [
   {
@@ -33,28 +35,47 @@ const QUICK_LINKS = [
   },
 ];
 
-export default function DashboardPage({ setPage, students, courses, depts }) {
+export default function DashboardPage({ setPage }) {
+  const [summary, setSummary] = useState({
+    totalStudents: 0,
+    totalCourses: 0,
+    totalDepartments: 0,
+    totalClasses: 0,
+    totalEnrollments: 0,
+  });
+
+  useEffect(() => {
+    const loadSummary = async () => {
+      try {
+        const data = await api.get("/dashboard/summary");
+        setSummary(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadSummary();
+  }, []);
+
   return (
     <div>
       <h1 style={S.pageTitle}>Dashboard</h1>
 
-      {/* Stat cards */}
-      <div style={{ display: "flex", gap: 16, marginBottom: 28 }}>
+      <div style={{ display: "flex", gap: 16, marginBottom: 28, flexWrap: "wrap" }}>
         <div style={S.statCard}>
           <div style={S.statLabel}>Total Students</div>
-          <div style={S.statValue}>{students.length}</div>
+          <div style={S.statValue}>{summary.totalStudents}</div>
         </div>
         <div style={S.statCard}>
           <div style={S.statLabel}>Total Courses</div>
-          <div style={S.statValue}>{courses.length}</div>
+          <div style={S.statValue}>{summary.totalCourses}</div>
         </div>
         <div style={S.statCard}>
           <div style={S.statLabel}>Active Departments</div>
-          <div style={S.statValue}>{depts.length}</div>
+          <div style={S.statValue}>{summary.totalDepartments}</div>
         </div>
       </div>
 
-      {/* Quick links */}
       <h2 style={S.sectionTitle}>Quick Links</h2>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {QUICK_LINKS.map((ql) => (
