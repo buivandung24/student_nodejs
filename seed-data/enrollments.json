@@ -1,0 +1,98 @@
+[
+  {
+    "_id": { "$oid": "66f500000000000000000001" },
+    "student": { "$oid": "66f400000000000000000001" },
+    "course": { "$oid": "66f300000000000000000001" },
+    "semester": "Semester 1",
+    "enrolledAt": { "$date": "2025-03-05T08:00:00.000Z" },
+    "midtermScore": 78,
+    "finalScore": 85,
+    "overallGrade": "B+",
+    "createdAt": { "$date": "2025-03-05T08:00:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000002" },
+    "student": { "$oid": "66f400000000000000000003" },
+    "course": { "$oid": "66f300000000000000000001" },
+    "semester": "Semester 1",
+    "enrolledAt": { "$date": "2025-03-05T08:05:00.000Z" },
+    "midtermScore": 88,
+    "finalScore": 91,
+    "overallGrade": "A",
+    "createdAt": { "$date": "2025-03-05T08:05:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:05:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000003" },
+    "student": { "$oid": "66f400000000000000000005" },
+    "course": { "$oid": "66f300000000000000000002" },
+    "semester": "Semester 1",
+    "enrolledAt": { "$date": "2025-03-05T08:10:00.000Z" },
+    "midtermScore": 70,
+    "finalScore": 76,
+    "overallGrade": "C+",
+    "createdAt": { "$date": "2025-03-05T08:10:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:10:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000004" },
+    "student": { "$oid": "66f400000000000000000002" },
+    "course": { "$oid": "66f300000000000000000004" },
+    "semester": "Semester 1",
+    "enrolledAt": { "$date": "2025-03-05T08:15:00.000Z" },
+    "midtermScore": 82,
+    "finalScore": 79,
+    "overallGrade": "B+",
+    "createdAt": { "$date": "2025-03-05T08:15:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:15:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000005" },
+    "student": { "$oid": "66f400000000000000000006" },
+    "course": { "$oid": "66f300000000000000000004" },
+    "semester": "Semester 2",
+    "enrolledAt": { "$date": "2025-03-05T08:20:00.000Z" },
+    "midtermScore": 65,
+    "finalScore": 72,
+    "overallGrade": "C",
+    "createdAt": { "$date": "2025-03-05T08:20:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:20:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000006" },
+    "student": { "$oid": "66f400000000000000000004" },
+    "course": { "$oid": "66f300000000000000000003" },
+    "semester": "Semester 1",
+    "enrolledAt": { "$date": "2025-03-05T08:25:00.000Z" },
+    "midtermScore": 90,
+    "finalScore": 94,
+    "overallGrade": "A",
+    "createdAt": { "$date": "2025-03-05T08:25:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:25:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000007" },
+    "student": { "$oid": "66f400000000000000000001" },
+    "course": { "$oid": "66f300000000000000000005" },
+    "semester": "Semester 2",
+    "enrolledAt": { "$date": "2025-03-05T08:30:00.000Z" },
+    "midtermScore": 75,
+    "finalScore": 80,
+    "overallGrade": "B",
+    "createdAt": { "$date": "2025-03-05T08:30:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:30:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f500000000000000000008" },
+    "student": { "$oid": "66f400000000000000000003" },
+    "course": { "$oid": "66f300000000000000000002" },
+    "semester": "Semester 2",
+    "enrolledAt": { "$date": "2025-03-05T08:35:00.000Z" },
+    "midtermScore": 68,
+    "finalScore": 74,
+    "overallGrade": "C+",
+    "createdAt": { "$date": "2025-03-05T08:35:00.000Z" },
+    "updatedAt": { "$date": "2025-03-05T08:35:00.000Z" }
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "_id": { "$oid": "66f300000000000000000001" },
+    "courseId": "CS101",
+    "name": "Introduction to Programming",
+    "credits": 3,
+    "department": { "$oid": "66f100000000000000000001" },
+    "createdAt": { "$date": "2025-03-03T08:00:00.000Z" },
+    "updatedAt": { "$date": "2025-03-03T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f300000000000000000002" },
+    "courseId": "CS201",
+    "name": "Database Systems",
+    "credits": 3,
+    "department": { "$oid": "66f100000000000000000001" },
+    "createdAt": { "$date": "2025-03-03T08:05:00.000Z" },
+    "updatedAt": { "$date": "2025-03-03T08:05:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f300000000000000000003" },
+    "courseId": "MA201",
+    "name": "Calculus I",
+    "credits": 4,
+    "department": { "$oid": "66f100000000000000000003" },
+    "createdAt": { "$date": "2025-03-03T08:10:00.000Z" },
+    "updatedAt": { "$date": "2025-03-03T08:10:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f300000000000000000004" },
+    "courseId": "PH101",
+    "name": "General Physics",
+    "credits": 3,
+    "department": { "$oid": "66f100000000000000000002" },
+    "createdAt": { "$date": "2025-03-03T08:15:00.000Z" },
+    "updatedAt": { "$date": "2025-03-03T08:15:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f300000000000000000005" },
+    "courseId": "SE301",
+    "name": "Software Engineering",
+    "credits": 3,
+    "department": { "$oid": "66f100000000000000000001" },
+    "createdAt": { "$date": "2025-03-03T08:20:00.000Z" },
+    "updatedAt": { "$date": "2025-03-03T08:20:00.000Z" }
+  }
+]

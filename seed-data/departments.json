@@ -1,0 +1,23 @@
+[
+  {
+    "_id": { "$oid": "66f100000000000000000001" },
+    "deptId": "CSE",
+    "name": "Computer Science",
+    "createdAt": { "$date": "2025-03-01T08:00:00.000Z" },
+    "updatedAt": { "$date": "2025-03-01T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f100000000000000000002" },
+    "deptId": "EEE",
+    "name": "Electrical Engineering",
+    "createdAt": { "$date": "2025-03-01T08:05:00.000Z" },
+    "updatedAt": { "$date": "2025-03-01T08:05:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f100000000000000000003" },
+    "deptId": "MTH",
+    "name": "Mathematics",
+    "createdAt": { "$date": "2025-03-01T08:10:00.000Z" },
+    "updatedAt": { "$date": "2025-03-01T08:10:00.000Z" }
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "_id": { "$oid": "66f600000000000000000001" },
+    "username": "admin1",
+    "password": "$2b$12$btEaP3X36PL1NNvFyi61.eZTVw2f34T.QvJyJPYsyZmzDPi5wUCWa",
+    "fullName": "Admin Demo",
+    "email": "admin1@example.com",
+    "role": "staff",
+    "phone": "0123456789",
+    "isActive": true,
+    "createdAt": { "$date": "2025-03-06T08:00:00.000Z" },
+    "updatedAt": { "$date": "2025-03-06T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66f600000000000000000002" },
+    "username": "lecturer1",
+    "password": "$2b$12$btEaP3X36PL1NNvFyi61.eZTVw2f34T.QvJyJPYsyZmzDPi5wUCWa",
+    "fullName": "Lecturer Demo",
+    "email": "lecturer1@example.com",
+    "role": "lecture",
+    "phone": "0987654321",
+    "isActive": true,
+    "createdAt": { "$date": "2025-03-06T08:05:00.000Z" },
+    "updatedAt": { "$date": "2025-03-06T08:05:00.000Z" }
+  }
+]
