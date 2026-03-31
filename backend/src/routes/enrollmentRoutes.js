@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getEnrollments,
+  getEnrollmentById,
   createEnrollment,
   bulkRegisterStudents,
   bulkUnregisterStudents,
@@ -12,6 +13,7 @@ import {
 const router = express.Router();
 
 router.get('/', getEnrollments);
+router.get('/:id', getEnrollmentById);
 router.post('/', createEnrollment);
 router.post('/bulk-register', bulkRegisterStudents);
 router.post('/bulk-unregister', bulkUnregisterStudents);

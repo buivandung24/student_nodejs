@@ -11,15 +11,19 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: 'Student Management API is running',
-    });
+  res.status(200).json({
+    success: true,
+    message: 'Student Management API is running',
+  });
 });
 
 app.use('/api/auth', authRoutes);
@@ -31,19 +35,19 @@ app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: `Route not found: ${req.method} ${req.originalUrl}`,
-    });
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.method} ${req.originalUrl}`,
+  });
 });
 
 app.use((err, req, res, next) => {
-    console.error('Global error:', err);
+  console.error('Global error:', err);
 
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal Server Error',
-    });
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
+  });
 });
 
 export default app;

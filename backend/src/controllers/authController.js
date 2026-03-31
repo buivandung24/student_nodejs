@@ -1,78 +1,93 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-require('dotenv').config();
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 
-// Đăng ký
-const register = async (req, res) => {
-  const { name, email, password } = req.body;
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+};
+
+// POST /api/auth/register
+export const registerUser = async (req, res) => {
+  const { username, password, fullName, email, role, phone } = req.body;
 
   try {
-    const existingUser = await User.findByEmail(email);
-    if (existingUser) return res.status(400).json({ msg: 'Email đã tồn tại' });
+    if (!username || !password || !fullName || !email || !role) {
+      return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin bắt buộc' });
+    }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const userExists = await User.findOne({
+      $or: [{ username: username.toLowerCase() }, { email: email.toLowerCase() }],
+    });
 
-    const newUser = await User.create({ name, email, password: hashedPassword });
+    if (userExists) {
+      return res.status(400).json({ message: 'Username hoặc Email đã tồn tại' });
+    }
 
-    const token = jwt.sign({ id: newUser.id, role: newUser.role }, process.env.JWT_SECRET, {
-      expiresIn: '7d',
+    const user = await User.create({
+      username,
+      password,
+      fullName,
+      email,
+      role,
+      phone,
     });
 
     res.status(201).json({
-      msg: 'Đăng ký thành công',
-      token,
-      user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role },
+      _id: user._id,
+      username: user.username,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      token: generateToken(user._id),
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: 'Lỗi server' });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Đăng nhập
-const login = async (req, res) => {
-  const { email, password } = req.body;
+// POST /api/auth/login
+export const loginUser = async (req, res) => {
+  const { username, password } = req.body;
 
   try {
-    const user = await User.findByEmail(email);
-    if (!user) return res.status(400).json({ msg: 'Email hoặc mật khẩu không đúng' });
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Vui lòng nhập username và password' });
+    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Email hoặc mật khẩu không đúng' });
+    const user = await User.findOne({ username: username.toLowerCase() });
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '7d',
-    });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ message: 'Tài khoản hoặc mật khẩu không đúng' });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ message: 'Tài khoản đã bị khóa' });
+    }
 
     res.json({
-      msg: 'Đăng nhập thành công',
-      token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      _id: user._id,
+      username: user.username,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      token: generateToken(user._id),
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: 'Lỗi server' });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Đăng xuất (JWT stateless nên chỉ client xóa token)
-const logout = async (req, res) => {
-  res.json({ msg: 'Đăng xuất thành công' });
-};
-
-// Lấy thông tin profile (dùng cho StudentDetailPage.jsx)
-const getProfile = async (req, res) => {
+// GET /api/auth/profile
+export const getMyProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ msg: 'User không tồn tại' });
-
-    res.json({ user });
+    res.json(req.user);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: 'Lỗi server' });
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { register, login, logout, getProfile };
+// POST /api/auth/logout
+export const logoutUser = async (req, res) => {
+  res.json({ message: 'Đăng xuất thành công' });
+};
